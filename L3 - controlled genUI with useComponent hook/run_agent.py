@@ -105,19 +105,24 @@ def create_adk_app(model_name: str = "gemini-3.5-flash-lite") -> FastAPI:
     """
     from ag_ui_adk import ADKAgent, AGUIToolset, add_adk_fastapi_endpoint
     from google.adk.agents import LlmAgent
+    from google.adk.integrations.langchain import LangchainTool
 
     logger.info("Initializing Google ADK Agent for L3 (model: %s)", model_name)
     gemini_agent = LlmAgent(
         name="assistant",
         model=model_name,
         instruction=(
-            "You are a helpful assistant for a demo app with frontend UI tools. "
+            "You are a helpful assistant for a demo app with a few available UI tools. "
+            "When a user asks for charts based on the lesson dataset, always call query_data first to fetch all CSV rows. "
             "Prefer using a matching frontend tool when it would present the answer clearly. "
             "Use pieChart for category distributions, "
             "flightCard for a single flight summary when relevant, "
             "and showMyName to display the user's name."
         ),
         tools=[
+            # Backend tool: wraps the shared LangChain @tool so ADK can call it
+            # like any native FunctionTool.
+            LangchainTool(query_data),
             # Placeholder swapped per-run for the frontend's registered
             # showMyName/pieChart/flightCard tools (see ag_ui_adk.AGUIToolset).
             AGUIToolset(),

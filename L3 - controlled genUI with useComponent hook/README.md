@@ -76,11 +76,11 @@ useComponent({
 The standalone runner [run_agent.py](run_agent.py) launches the L3 FastAPI agent backend on **Port 8003**, supporting both LangGraph (OpenAI) and Google ADK (Gemini).
 
 ### Key Features:
-* **`query_data` Tool**: Includes the backend CSV reader tool for querying dataset rows from [db.csv](db.csv).
+* **`query_data` Tool**: Includes the backend CSV reader tool for querying dataset rows from [db.csv](db.csv) — shared by both agent types (wrapped for ADK via `LangchainTool`).
 * **System Instruction**: Guides the agent to invoke `query_data` first for data requests and prefer matching UI tools (`pieChart`, `flightCard`, `showMyName`).
 * **Dual Agent Support**: Switch between `AGENT_TYPE = "langgraph"` (OpenAI) and `AGENT_TYPE = "adk"` (Google Gemini).
 
-> **Note:** the two agent types wire up frontend tools very differently — see [Troubleshooting](#-troubleshooting) below before assuming the two paths are interchangeable.
+> **Note:** the two agent types wire up both backend and frontend tools very differently under the hood — see [Troubleshooting](#-troubleshooting) below before assuming the two paths are interchangeable.
 
 ---
 
@@ -179,6 +179,44 @@ gemini_agent = LlmAgent(
 ```
 
 This is already applied in [run_agent.py](run_agent.py).
+
+### `pieChart` shows plausible-looking but wrong numbers under `AGENT_TYPE=adk`
+
+**Symptom:** no error this time — but the pie chart's categories/values don't
+match [db.csv](db.csv), because the ADK agent never actually read the file.
+
+**Root cause:** `create_adk_app()` only declared the `AGUIToolset()` frontend
+placeholder — it never gave the ADK agent the backend `query_data` tool that
+reads `db.csv`, and its instruction never told it to call one. The LangGraph
+path's instruction explicitly says *"always call `query_data` first to fetch
+all CSV rows"* and passes `tools=[query_data]`; the ADK instruction had no
+mention of `query_data` at all. Asked for a chart, Gemini has no dataset tool
+to call, so it fabricates numbers that merely look reasonable.
+
+**Fix:** give the ADK agent the same backend tool. `query_data` is defined
+once at module scope as a LangChain `@tool` (shared by both agent builders);
+ADK doesn't run LangChain tools natively, so wrap it with the ADK SDK's own
+adapter, `google.adk.integrations.langchain.LangchainTool`, which converts it
+into a normal ADK `FunctionTool` while preserving its name/description/schema:
+
+```python
+from google.adk.integrations.langchain import LangchainTool
+
+gemini_agent = LlmAgent(
+    ...,
+    instruction=(
+        "...  When a user asks for charts based on the lesson dataset, "
+        "always call query_data first to fetch all CSV rows.  ..."
+    ),
+    tools=[
+        LangchainTool(query_data),  # backend tool, wrapped for ADK
+        AGUIToolset(),              # frontend tools, per-run substitution
+    ],
+)
+```
+
+This is already applied in [run_agent.py](run_agent.py) — both agent types
+now share the exact same `query_data` tool and instruction wording.
 
 ### Why doesn't the LangGraph path need this fix?
 
