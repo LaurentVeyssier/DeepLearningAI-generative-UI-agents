@@ -1,0 +1,174 @@
+
+> frontend@0.1.0 dev
+> node --import tsx/esm watch-server.ts & vite --port 3003
+
+
+  [32m[1mVITE[22m v6.4.2[39m  [2mready in [0m[1m590[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m3003[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://169.254.172.89:[1m3003[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://172.29.61.155:[1m3003[22m/[39m
+✓ CopilotKit API server running at http://localhost:4003
+Invalid connect request body: ZodError: [
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "threadId"
+    ],
+    "message": "Required"
+  },
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "runId"
+    ],
+    "message": "Required"
+  },
+  {
+    "code": "invalid_type",
+    "expected": "array",
+    "received": "undefined",
+    "path": [
+      "tools"
+    ],
+    "message": "Required"
+  },
+  {
+    "code": "invalid_type",
+    "expected": "array",
+    "received": "undefined",
+    "path": [
+      "context"
+    ],
+    "message": "Required"
+  }
+]
+    at get error [90m(file:///home/jovyan/work/L3/frontend/[39mnode_modules/[4mzod[24m/v3/types.js:39:31[90m)[39m
+    at ZodObject.parse [90m(file:///home/jovyan/work/L3/frontend/[39mnode_modules/[4mzod[24m/v3/types.js:114:22[90m)[39m
+    at parseConnectRequest [90m(/home/jovyan/work/L3/frontend/[39mnode_modules/[4m@copilotkit/runtime[24m/src/v2/runtime/handlers/shared/agent-utils.ts:128:39[90m)[39m
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)[39m
+    at async handleConnectAgent [90m(/home/jovyan/work/L3/frontend/[39mnode_modules/[4m@copilotkit/runtime[24m/src/v2/runtime/handlers/handle-connect.ts:37:28[90m)[39m
+    at async <anonymous> [90m(/home/jovyan/work/L3/frontend/[39mnode_modules/[4m@copilotkit/runtime[24m/src/v2/runtime/core/fetch-handler.ts:199:20[90m)[39m
+    at async responseViaResponseObject [90m(file:///home/jovyan/work/L3/frontend/[39mnode_modules/[4m@hono/node-server[24m/dist/index.mjs:465:13[90m)[39m
+    at async Server.<anonymous> [90m(file:///home/jovyan/work/L3/frontend/[39mnode_modules/[4m@hono/node-server[24m/dist/index.mjs:608:14[90m)[39m {
+  issues: [
+    {
+      code: [32m'invalid_type'[39m,
+      expected: [32m'string'[39m,
+      received: [32m'undefined'[39m,
+      path: [36m[Array][39m,
+      message: [32m'Required'[39m
+    },
+    {
+      code: [32m'invalid_type'[39m,
+      expected: [32m'string'[39m,
+      received: [32m'undefined'[39m,
+      path: [36m[Array][39m,
+      message: [32m'Required'[39m
+    },
+    {
+      code: [32m'invalid_type'[39m,
+      expected: [32m'array'[39m,
+      received: [32m'undefined'[39m,
+      path: [36m[Array][39m,
+      message: [32m'Required'[39m
+    },
+    {
+      code: [32m'invalid_type'[39m,
+      expected: [32m'array'[39m,
+      received: [32m'undefined'[39m,
+      path: [36m[Array][39m,
+      message: [32m'Required'[39m
+    }
+  ],
+  addIssue: [36m[Function (anonymous)][39m,
+  addIssues: [36m[Function (anonymous)][39m
+}
+[2m3:50:16 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdev-logs.txt[22m
+[2m3:50:16 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdev-logs.txt[22m
+[2m3:50:19 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/App.tsx, /src/globals.css[22m
+[2m3:50:19 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdev-logs.txt[22m
+Invalid connect request body: ZodError: [
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "threadId"
+    ],
+    "message": "Required"
+  },
+  {
+    "code": "invalid_type",
+    "expected": "string",
+    "received": "undefined",
+    "path": [
+      "runId"
+    ],
+    "message": "Required"
+  },
+  {
+    "code": "invalid_type",
+    "expected": "array",
+    "received": "undefined",
+    "path": [
+      "tools"
+    ],
+    "message": "Required"
+  },
+  {
+    "code": "invalid_type",
+    "expected": "array",
+    "received": "undefined",
+    "path": [
+      "context"
+    ],
+    "message": "Required"
+  }
+]
+    at get error [90m(file:///home/jovyan/work/L3/frontend/[39mnode_modules/[4mzod[24m/v3/types.js:39:31[90m)[39m
+    at ZodObject.parse [90m(file:///home/jovyan/work/L3/frontend/[39mnode_modules/[4mzod[24m/v3/types.js:114:22[90m)[39m
+    at parseConnectRequest [90m(/home/jovyan/work/L3/frontend/[39mnode_modules/[4m@copilotkit/runtime[24m/src/v2/runtime/handlers/shared/agent-utils.ts:128:39[90m)[39m
+[90m    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)[39m
+    at async handleConnectAgent [90m(/home/jovyan/work/L3/frontend/[39mnode_modules/[4m@copilotkit/runtime[24m/src/v2/runtime/handlers/handle-connect.ts:37:28[90m)[39m
+    at async <anonymous> [90m(/home/jovyan/work/L3/frontend/[39mnode_modules/[4m@copilotkit/runtime[24m/src/v2/runtime/core/fetch-handler.ts:199:20[90m)[39m
+    at async responseViaResponseObject [90m(file:///home/jovyan/work/L3/frontend/[39mnode_modules/[4m@hono/node-server[24m/dist/index.mjs:465:13[90m)[39m
+    at async Server.<anonymous> [90m(file:///home/jovyan/work/L3/frontend/[39mnode_modules/[4m@hono/node-server[24m/dist/index.mjs:608:14[90m)[39m {
+  issues: [
+    {
+      code: [32m'invalid_type'[39m,
+      expected: [32m'string'[39m,
+      received: [32m'undefined'[39m,
+      path: [36m[Array][39m,
+      message: [32m'Required'[39m
+    },
+    {
+      code: [32m'invalid_type'[39m,
+      expected: [32m'string'[39m,
+      received: [32m'undefined'[39m,
+      path: [36m[Array][39m,
+      message: [32m'Required'[39m
+    },
+    {
+      code: [32m'invalid_type'[39m,
+      expected: [32m'array'[39m,
+      received: [32m'undefined'[39m,
+      path: [36m[Array][39m,
+      message: [32m'Required'[39m
+    },
+    {
+      code: [32m'invalid_type'[39m,
+      expected: [32m'array'[39m,
+      received: [32m'undefined'[39m,
+      path: [36m[Array][39m,
+      message: [32m'Required'[39m
+    }
+  ],
+  addIssue: [36m[Function (anonymous)][39m,
+  addIssues: [36m[Function (anonymous)][39m
+}
+[2m3:50:32 PM[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdev-logs.txt[22m
