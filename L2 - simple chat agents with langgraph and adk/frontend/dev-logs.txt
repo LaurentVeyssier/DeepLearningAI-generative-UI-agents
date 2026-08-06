@@ -1,0 +1,229 @@
+[35m[1][39m 
+[35m[1][39m   [32m[1mVITE[22m v6.4.2[39m  [2mready in [0m[1m355[22m[2m[0m ms[22m
+[35m[1][39m 
+[35m[1][39m   [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m3002[22m/[39m
+[35m[1][39m   [32m➜[39m  [1mNetwork[22m: [36mhttp://192.168.1.99:[1m3002[22m/[39m
+[35m[1][39m   [32m➜[39m  [1mNetwork[22m: [36mhttp://172.22.64.1:[1m3002[22m/[39m
+[36m[0][39m CopilotKit API server running at http://localhost:4002
+[35m[1][39m [2m16:27:29[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/copilotkit/info[39m
+[35m[1][39m AggregateError [ECONNREFUSED]: 
+[35m[1][39m     at internalConnectMultiple (node:net:1134:18)
+[35m[1][39m     at afterConnectMultiple (node:net:1715:7)
+[36m[0][39m Invalid connect request body: ZodError: [
+[36m[0][39m   {
+[36m[0][39m     "code": "invalid_type",
+[36m[0][39m     "expected": "string",
+[36m[0][39m     "received": "undefined",
+[36m[0][39m     "path": [
+[36m[0][39m       "threadId"
+[36m[0][39m     ],
+[36m[0][39m     "message": "Required"
+[36m[0][39m   },
+[36m[0][39m   {
+[36m[0][39m     "code": "invalid_type",
+[36m[0][39m     "expected": "string",
+[36m[0][39m     "received": "undefined",
+[36m[0][39m     "path": [
+[36m[0][39m       "runId"
+[36m[0][39m     ],
+[36m[0][39m     "message": "Required"
+[36m[0][39m   },
+[36m[0][39m   {
+[36m[0][39m     "code": "invalid_type",
+[36m[0][39m     "expected": "array",
+[36m[0][39m     "received": "undefined",
+[36m[0][39m     "path": [
+[36m[0][39m       "tools"
+[36m[0][39m     ],
+[36m[0][39m     "message": "Required"
+[36m[0][39m   },
+[36m[0][39m   {
+[36m[0][39m     "code": "invalid_type",
+[36m[0][39m     "expected": "array",
+[36m[0][39m     "received": "undefined",
+[36m[0][39m     "path": [
+[36m[0][39m       "context"
+[36m[0][39m     ],
+[36m[0][39m     "message": "Required"
+[36m[0][39m   }
+[36m[0][39m ]
+[36m[0][39m     at get error [90m(file:///c:/Users/lveys/Downloads/DeepLearningAI%20-%20generative%20UI%20agents/L2%20-%20simple%20chat%20agents%20with%20langgraph%20and%20adk/frontend/[39mnode_modules/[4mzod[24m/v3/types.js:39:31[90m)[39m
+[36m[0][39m     at ZodObject.parse [90m(file:///c:/Users/lveys/Downloads/DeepLearningAI%20-%20generative%20UI%20agents/L2%20-%20simple%20chat%20agents%20with%20langgraph%20and%20adk/frontend/[39mnode_modules/[4mzod[24m/v3/types.js:114:22[90m)[39m
+[36m[0][39m     at parseConnectRequest [90m(c:\Users\lveys\Downloads\DeepLearningAI - generative UI agents\L2 - simple chat agents with langgraph and adk\frontend\[39mnode_modules\[4m@copilotkit\runtime[24m\src\v2\runtime\handlers\shared\agent-utils.ts:128:39[90m)[39m
+[36m[0][39m [90m    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+[36m[0][39m     at async handleConnectAgent [90m(c:\Users\lveys\Downloads\DeepLearningAI - generative UI agents\L2 - simple chat agents with langgraph and adk\frontend\[39mnode_modules\[4m@copilotkit\runtime[24m\src\v2\runtime\handlers\handle-connect.ts:37:28[90m)[39m
+[36m[0][39m     at async <anonymous> [90m(c:\Users\lveys\Downloads\DeepLearningAI - generative UI agents\L2 - simple chat agents with langgraph and adk\frontend\[39mnode_modules\[4m@copilotkit\runtime[24m\src\v2\runtime\core\fetch-handler.ts:199:20[90m)[39m
+[36m[0][39m     at async responseViaResponseObject [90m(file:///c:/Users/lveys/Downloads/DeepLearningAI%20-%20generative%20UI%20agents/L2%20-%20simple%20chat%20agents%20with%20langgraph%20and%20adk/frontend/[39mnode_modules/[4m@hono/node-server[24m/dist/index.mjs:465:13[90m)[39m
+[36m[0][39m     at async Server.<anonymous> [90m(file:///c:/Users/lveys/Downloads/DeepLearningAI%20-%20generative%20UI%20agents/L2%20-%20simple%20chat%20agents%20with%20langgraph%20and%20adk/frontend/[39mnode_modules/[4m@hono/node-server[24m/dist/index.mjs:608:14[90m)[39m {
+[36m[0][39m   issues: [
+[36m[0][39m     {
+[36m[0][39m       code: [32m'invalid_type'[39m,
+[36m[0][39m       expected: [32m'string'[39m,
+[36m[0][39m       received: [32m'undefined'[39m,
+[36m[0][39m       path: [36m[Array][39m,
+[36m[0][39m       message: [32m'Required'[39m
+[36m[0][39m     },
+[36m[0][39m     {
+[36m[0][39m       code: [32m'invalid_type'[39m,
+[36m[0][39m       expected: [32m'string'[39m,
+[36m[0][39m       received: [32m'undefined'[39m,
+[36m[0][39m       path: [36m[Array][39m,
+[36m[0][39m       message: [32m'Required'[39m
+[36m[0][39m     },
+[36m[0][39m     {
+[36m[0][39m       code: [32m'invalid_type'[39m,
+[36m[0][39m       expected: [32m'array'[39m,
+[36m[0][39m       received: [32m'undefined'[39m,
+[36m[0][39m       path: [36m[Array][39m,
+[36m[0][39m       message: [32m'Required'[39m
+[36m[0][39m     },
+[36m[0][39m     {
+[36m[0][39m       code: [32m'invalid_type'[39m,
+[36m[0][39m       expected: [32m'array'[39m,
+[36m[0][39m       received: [32m'undefined'[39m,
+[36m[0][39m       path: [36m[Array][39m,
+[36m[0][39m       message: [32m'Required'[39m
+[36m[0][39m     }
+[36m[0][39m   ],
+[36m[0][39m   addIssue: [36m[Function (anonymous)][39m,
+[36m[0][39m   addIssues: [36m[Function (anonymous)][39m,
+[36m[0][39m   errors: [
+[36m[0][39m     {
+[36m[0][39m       code: [32m'invalid_type'[39m,
+[36m[0][39m       expected: [32m'string'[39m,
+[36m[0][39m       received: [32m'undefined'[39m,
+[36m[0][39m       path: [36m[Array][39m,
+[36m[0][39m       message: [32m'Required'[39m
+[36m[0][39m     },
+[36m[0][39m     {
+[36m[0][39m       code: [32m'invalid_type'[39m,
+[36m[0][39m       expected: [32m'string'[39m,
+[36m[0][39m       received: [32m'undefined'[39m,
+[36m[0][39m       path: [36m[Array][39m,
+[36m[0][39m       message: [32m'Required'[39m
+[36m[0][39m     },
+[36m[0][39m     {
+[36m[0][39m       code: [32m'invalid_type'[39m,
+[36m[0][39m       expected: [32m'array'[39m,
+[36m[0][39m       received: [32m'undefined'[39m,
+[36m[0][39m       path: [36m[Array][39m,
+[36m[0][39m       message: [32m'Required'[39m
+[36m[0][39m     },
+[36m[0][39m     {
+[36m[0][39m       code: [32m'invalid_type'[39m,
+[36m[0][39m       expected: [32m'array'[39m,
+[36m[0][39m       received: [32m'undefined'[39m,
+[36m[0][39m       path: [36m[Array][39m,
+[36m[0][39m       message: [32m'Required'[39m
+[36m[0][39m     }
+[36m[0][39m   ]
+[36m[0][39m }
+[36m[0][39m Invalid connect request body: ZodError: [
+[36m[0][39m   {
+[36m[0][39m     "code": "invalid_type",
+[36m[0][39m     "expected": "string",
+[36m[0][39m     "received": "undefined",
+[36m[0][39m     "path": [
+[36m[0][39m       "threadId"
+[36m[0][39m     ],
+[36m[0][39m     "message": "Required"
+[36m[0][39m   },
+[36m[0][39m   {
+[36m[0][39m     "code": "invalid_type",
+[36m[0][39m     "expected": "string",
+[36m[0][39m     "received": "undefined",
+[36m[0][39m     "path": [
+[36m[0][39m       "runId"
+[36m[0][39m     ],
+[36m[0][39m     "message": "Required"
+[36m[0][39m   },
+[36m[0][39m   {
+[36m[0][39m     "code": "invalid_type",
+[36m[0][39m     "expected": "array",
+[36m[0][39m     "received": "undefined",
+[36m[0][39m     "path": [
+[36m[0][39m       "tools"
+[36m[0][39m     ],
+[36m[0][39m     "message": "Required"
+[36m[0][39m   },
+[36m[0][39m   {
+[36m[0][39m     "code": "invalid_type",
+[36m[0][39m     "expected": "array",
+[36m[0][39m     "received": "undefined",
+[36m[0][39m     "path": [
+[36m[0][39m       "context"
+[36m[0][39m     ],
+[36m[0][39m     "message": "Required"
+[36m[0][39m   }
+[36m[0][39m ]
+[36m[0][39m     at get error [90m(file:///c:/Users/lveys/Downloads/DeepLearningAI%20-%20generative%20UI%20agents/L2%20-%20simple%20chat%20agents%20with%20langgraph%20and%20adk/frontend/[39mnode_modules/[4mzod[24m/v3/types.js:39:31[90m)[39m
+[36m[0][39m     at ZodObject.parse [90m(file:///c:/Users/lveys/Downloads/DeepLearningAI%20-%20generative%20UI%20agents/L2%20-%20simple%20chat%20agents%20with%20langgraph%20and%20adk/frontend/[39mnode_modules/[4mzod[24m/v3/types.js:114:22[90m)[39m
+[36m[0][39m     at parseConnectRequest [90m(c:\Users\lveys\Downloads\DeepLearningAI - generative UI agents\L2 - simple chat agents with langgraph and adk\frontend\[39mnode_modules\[4m@copilotkit\runtime[24m\src\v2\runtime\handlers\shared\agent-utils.ts:128:39[90m)[39m
+[36m[0][39m [90m    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)[39m
+[36m[0][39m     at async handleConnectAgent [90m(c:\Users\lveys\Downloads\DeepLearningAI - generative UI agents\L2 - simple chat agents with langgraph and adk\frontend\[39mnode_modules\[4m@copilotkit\runtime[24m\src\v2\runtime\handlers\handle-connect.ts:37:28[90m)[39m
+[36m[0][39m     at async <anonymous> [90m(c:\Users\lveys\Downloads\DeepLearningAI - generative UI agents\L2 - simple chat agents with langgraph and adk\frontend\[39mnode_modules\[4m@copilotkit\runtime[24m\src\v2\runtime\core\fetch-handler.ts:199:20[90m)[39m
+[36m[0][39m     at async responseViaResponseObject [90m(file:///c:/Users/lveys/Downloads/DeepLearningAI%20-%20generative%20UI%20agents/L2%20-%20simple%20chat%20agents%20with%20langgraph%20and%20adk/frontend/[39mnode_modules/[4m@hono/node-server[24m/dist/index.mjs:465:13[90m)[39m
+[36m[0][39m     at async Server.<anonymous> [90m(file:///c:/Users/lveys/Downloads/DeepLearningAI%20-%20generative%20UI%20agents/L2%20-%20simple%20chat%20agents%20with%20langgraph%20and%20adk/frontend/[39mnode_modules/[4m@hono/node-server[24m/dist/index.mjs:608:14[90m)[39m {
+[36m[0][39m   issues: [
+[36m[0][39m     {
+[36m[0][39m       code: [32m'invalid_type'[39m,
+[36m[0][39m       expected: [32m'string'[39m,
+[36m[0][39m       received: [32m'undefined'[39m,
+[36m[0][39m       path: [36m[Array][39m,
+[36m[0][39m       message: [32m'Required'[39m
+[36m[0][39m     },
+[36m[0][39m     {
+[36m[0][39m       code: [32m'invalid_type'[39m,
+[36m[0][39m       expected: [32m'string'[39m,
+[36m[0][39m       received: [32m'undefined'[39m,
+[36m[0][39m       path: [36m[Array][39m,
+[36m[0][39m       message: [32m'Required'[39m
+[36m[0][39m     },
+[36m[0][39m     {
+[36m[0][39m       code: [32m'invalid_type'[39m,
+[36m[0][39m       expected: [32m'array'[39m,
+[36m[0][39m       received: [32m'undefined'[39m,
+[36m[0][39m       path: [36m[Array][39m,
+[36m[0][39m       message: [32m'Required'[39m
+[36m[0][39m     },
+[36m[0][39m     {
+[36m[0][39m       code: [32m'invalid_type'[39m,
+[36m[0][39m       expected: [32m'array'[39m,
+[36m[0][39m       received: [32m'undefined'[39m,
+[36m[0][39m       path: [36m[Array][39m,
+[36m[0][39m       message: [32m'Required'[39m
+[36m[0][39m     }
+[36m[0][39m   ],
+[36m[0][39m   addIssue: [36m[Function (anonymous)][39m,
+[36m[0][39m   addIssues: [36m[Function (anonymous)][39m,
+[36m[0][39m   errors: [
+[36m[0][39m     {
+[36m[0][39m       code: [32m'invalid_type'[39m,
+[36m[0][39m       expected: [32m'string'[39m,
+[36m[0][39m       received: [32m'undefined'[39m,
+[36m[0][39m       path: [36m[Array][39m,
+[36m[0][39m       message: [32m'Required'[39m
+[36m[0][39m     },
+[36m[0][39m     {
+[36m[0][39m       code: [32m'invalid_type'[39m,
+[36m[0][39m       expected: [32m'string'[39m,
+[36m[0][39m       received: [32m'undefined'[39m,
+[36m[0][39m       path: [36m[Array][39m,
+[36m[0][39m       message: [32m'Required'[39m
+[36m[0][39m     },
+[36m[0][39m     {
+[36m[0][39m       code: [32m'invalid_type'[39m,
+[36m[0][39m       expected: [32m'array'[39m,
+[36m[0][39m       received: [32m'undefined'[39m,
+[36m[0][39m       path: [36m[Array][39m,
+[36m[0][39m       message: [32m'Required'[39m
+[36m[0][39m     },
+[36m[0][39m     {
+[36m[0][39m       code: [32m'invalid_type'[39m,
+[36m[0][39m       expected: [32m'array'[39m,
+[36m[0][39m       received: [32m'undefined'[39m,
+[36m[0][39m       path: [36m[Array][39m,
+[36m[0][39m       message: [32m'Required'[39m
+[36m[0][39m     }
+[36m[0][39m   ]
+[36m[0][39m }
