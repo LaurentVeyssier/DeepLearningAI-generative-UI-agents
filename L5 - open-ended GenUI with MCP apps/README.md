@@ -2,7 +2,7 @@
 
 Welcome to **Lesson 5** of the _Generative UI Agents_ course. This document explains open-ended generative UI, every step of the Jupyter notebook ([L5.ipynb](L5.ipynb)), and how to run everything using a standalone Python script ([run_agent.py](run_agent.py)) — for both the LangGraph/OpenAI and Google ADK/Gemini agent paths.
 
-> **Setting up ADK/Gemini?** Jump straight to [⚙️ Required Configuration for Google ADK / Gemini](#-required-configuration-for-google-adk--gemini) for the checklist — and then read [🐞 Known Limitation: `openGenerativeUI` is broken on ADK](#-known-limitation-opengenerativeui-is-broken-on-adk) before you rely on it for anything beyond Excalidraw. LangGraph/OpenAI needs none of the ADK-specific wiring and has **no known limitations** — every feature in this lesson works cleanly there.
+> **Setting up ADK/Gemini?** Jump straight to [⚙️ Required Configuration for Google ADK / Gemini](#-required-configuration-for-google-adk--gemini) for the checklist — and then read [🐞 Known Limitation: `openGenerativeUI` is unreliable on ADK](#-known-limitation-opengenerativeui-is-unreliable-on-adk) before you rely on it for anything beyond Excalidraw. LangGraph/OpenAI needs none of the ADK-specific wiring and, in all live testing so far, renders every feature in this lesson correctly on the first try.
 
 ---
 
@@ -63,7 +63,7 @@ Two independent mechanisms deliver this, and this lesson uses **both**:
 | **Server needed?** | Yes — a real MCP server that implements the Apps extension | No — no MCP server involved at all |
 | **Config** | `mcpApps.servers: [{ type: "http", url, serverId }]` on `CopilotRuntime` | `openGenerativeUI: true` on `CopilotRuntime` **and** `openGenerativeUI={{}}` on the client `<CopilotKit>` provider (two-sided — see Gotchas) |
 | **Used for in this lesson** | Whiteboard/architecture diagrams | Everything else (taco animations, Mermaid diagrams via CDN-loaded `mermaid.js`) |
-| **ADK/Gemini status** | ✅ Fully working, verified live | ❌ **Broken on ADK** — verified live, root cause below. ✅ Fully working on LangGraph. |
+| **ADK/Gemini status** | ✅ Fully working, verified live, consistently | ⚠️ **Unreliable on ADK** — succeeds, shows raw unrendered source, or renders an empty card, seemingly at random; root cause and evidence below. ✅ Fully working, consistently, on LangGraph. |
 
 ### Why isn't Mermaid wired up as an MCP App?
 
@@ -101,9 +101,11 @@ Nothing else from L4's six-item ADK checklist applies here — there are no back
 
 ---
 
-## 🐞 Known Limitation: `openGenerativeUI` is broken on ADK
+## 🐞 Known Limitation: `openGenerativeUI` is unreliable on ADK
 
-**Summary, verified live on both backends:** Excalidraw (MCP App) works correctly on **both** LangGraph and ADK. `openGenerativeUI` (`generateSandboxedUi` — tacos, Mermaid, or anything else routed through it) works correctly on **LangGraph** but renders an empty/incomplete shell on **ADK**. This is a limitation of `ag_ui_adk`'s current architecture, not a bug in this script — no configuration was found that fixes it.
+**Summary, verified live across many repeated attempts on both backends:** Excalidraw (MCP App) works correctly and **consistently** on both LangGraph and ADK. `openGenerativeUI` (`generateSandboxedUi` — tacos, Mermaid, or anything else routed through it) works correctly and consistently on **LangGraph**, but on **ADK it is a coin flip per request** — the exact same prompt can produce a fully-rendered result, a card showing raw unrendered source text, or a completely empty card, on different attempts. This is a race condition in `ag_ui_adk`'s current architecture, not a bug in this script, and not something a prompt change fixes — but simply **asking the agent to try again** frequently recovers it (see below).
+
+An earlier draft of this README called this "broken on ADK." That was wrong — it is *intermittent*, confirmed by reproducing all three outcomes (success, raw-text, empty) across repeated identical-intent prompts in the same session.
 
 ### The two tools go through the identical ADK code path
 
@@ -124,22 +126,26 @@ INFO  Added tool call JLmvRH0F to thread ... pending list
 INFO  [EXEC] HITL_RESUME - thread=..., tool_results=['JLmvRH0F']
 ```
 
-### Excalidraw survives this; `generateSandboxedUi` does not
+### Excalidraw survives this reliably; `generateSandboxedUi` survives it unpredictably
 
-**Excalidraw, live test** — prompt: *"Show me a simple network diagram of three routers, two laptops and a server using excalidraw"* (`AGENT_TYPE=adk`). Result: a fully rendered, labeled Excalidraw whiteboard (routers, laptops, server, arrows, title) — despite `create_view` going through the exact same `LRO detected` → pending-list → `HITL_RESUME` cycle logged above.
+**Excalidraw, live tests (multiple, all backends, all attempts)** — prompt: *"Show me a simple network diagram of three routers, two laptops and a server using excalidraw"* / similar (`AGENT_TYPE=adk`). Result every time: a fully rendered, labeled Excalidraw whiteboard — despite `create_view` going through the exact same `LRO detected` → pending-list → `HITL_RESUME` cycle logged above. **100% success rate observed.**
 
-**`generateSandboxedUi`, live test #1** — prompt: *"Make it rain tacos!"* (`AGENT_TYPE=adk`). Result: a correctly-styled, correctly-sized 400px card `<div>` appears in the DOM — but with **zero children** and **zero `<iframe>` elements** anywhere on the page. No visual content at all, despite the agent's text response ("It's officially a Taco Storm!...") coming through fine.
+**`generateSandboxedUi` on ADK — three distinct outcomes observed across repeated attempts, same session, same backend, functionally equivalent prompts:**
 
-**`generateSandboxedUi`, live test #2** — prompt: *"Draw a flowchart of a login process using mermaid"* (`AGENT_TYPE=adk`). Result: the card renders this time, with a title ("🔒 Login Process Flowchart") and — instead of a rendered diagram — the **raw Mermaid source text** printed as plain content (`flowchart TD / A([Start...`). The `<script>` that loads `mermaid.js` from the CDN and calls `mermaid.initialize()` never executes.
+1. **Empty shell.** Prompt: *"Make it rain tacos!"* / *"Draw a flowchart of a login process using mermaid"* / *"Draw a mermaid flowchart of a coffee brewing process"*. A correctly-styled, correctly-sized card `<div>` appears — but with zero children and zero `<iframe>` elements anywhere on the page. No visual content at all.
+2. **Raw source text, un-rendered.** Prompt: *"Draw a flowchart of a signup process using mermaid"* / *"Show a mermaid sequence diagram of a simple ping pong between client and server"*. The card renders with a title (e.g. "User Signup Process Flowchart") and an `<iframe>` is present, but the content shown is the **literal Mermaid source** as styled monospace text (`flowchart TD / Start([Start Signup]) --> ...`) — not a diagram. The `<script>` that loads `mermaid.js` and calls `mermaid.initialize()` never executes, so Mermaid never converts that text into SVG shapes.
+3. **Full success.** Same class of prompt, retried (in one case, after the user explicitly said *"I see the code, not the flowchart"* and asked again) — a fully-rendered diagram appears: real boxes, arrows, colors, exactly as intended, no different in kind from the LangGraph result.
 
-Both `generateSandboxedUi` failures are consistent with the same underlying cause: the tool's streamed argument sequence (`initialHeight → placeholderMessages → css → html → jsFunctions → jsExpressions`) is progressive by design — the frontend's sandboxed-UI renderer expects to keep receiving argument deltas as the model writes them. ADK's long-running "drain until persistence completes, then resume via a synthetic separate exec cycle" flow collapses that progressive stream: some prefix of the sequence lands (enough for a styled shell, sometimes enough for the static HTML/title text), but the pipeline is cut short before the `<script>`/JS execution stage ever arrives, and the model's *actual* final content is never delivered in a form the renderer can use. The **real difference is not "long-running vs. not"** — Excalidraw is long-running too and still works — it's that MCP Apps rendering only needs the tool's call **arguments** (a small, complete JSON blob identifying the view, sent early) to open a `ui://` resource in an iframe, while `openGenerativeUI` needs the tool's entire progressive delivery pipeline to complete, which ADK's proxy architecture does not preserve.
+All three outcomes are consistent with a **race condition**, not three different bugs: the tool's streamed argument sequence (`initialHeight → placeholderMessages → css → html → jsFunctions → jsExpressions`) is progressive by design — the frontend's sandboxed-UI renderer keeps consuming argument deltas as the model writes them. ADK's long-running "drain until persistence completes, then resume via a synthetic separate exec cycle" flow does not cleanly preserve that progressive stream — depending on timing, it can (a) cut off before any content lands (outcome 1), (b) cut off after the HTML/text lands but before the `<script>` execution stage completes (outcome 2), or (c) happen to let the whole sequence through intact (outcome 3). Excalidraw isn't subject to this because MCP Apps rendering only needs the tool's call **arguments** (a small, complete JSON blob identifying the view, available early) to open a `ui://` resource in an iframe — it never depends on a multi-stage progressive-JS pipeline surviving the drain/resume cycle the way `openGenerativeUI` does.
 
-**Confirmed working on LangGraph, live, same prompts:** all three — tacos, Mermaid flowchart, and Excalidraw network diagram — render correctly and completely with `AGENT_TYPE=langgraph`. LangGraph's AG-UI adapter streams tool-call arguments directly, without an intermediate long-running/HITL-resume translation layer, so the full progressive sequence reaches the frontend intact.
+**Confirmed working on LangGraph, live, same prompts, every attempt:** tacos, multiple Mermaid diagrams, and Excalidraw all render correctly and completely with `AGENT_TYPE=langgraph`, with no failures observed across repeated tries. LangGraph's AG-UI adapter streams tool-call arguments directly, without an intermediate long-running/HITL-resume translation layer, so the full progressive sequence reaches the frontend intact every time.
 
 ### Practical takeaway
 
-- **If you need `openGenerativeUI` (arbitrary HTML/CSS/JS, including the Mermaid pattern used here), use `AGENT_TYPE=langgraph`.** It is not currently reliable on ADK, and no configuration in `ag_ui_adk` (as of this writing) provides a bypass equivalent to L4's `ADKAgent(a2ui={...})` backend-native escape hatch — `generateSandboxedUi` has no such native ADK equivalent; it is inherently and only a JS-runtime-injected tool.
-- **MCP Apps (Excalidraw) work fine on either backend.** If your use case is "launch a real external app," ADK is not a blocker.
+- **If you need `openGenerativeUI` to work reliably on the first try (arbitrary HTML/CSS/JS, including the Mermaid pattern used here), use `AGENT_TYPE=langgraph`.** No failures observed there across many attempts.
+- **If you're on ADK and a sandboxed-UI result comes back empty or shows raw code instead of a rendered diagram, just ask the agent to try again** (e.g. *"I see the code, not the flowchart"* / *"that didn't render, please try again"*) — this recovered a full, correct render in live testing. It's a client/timing race, not a content problem the model needs to fix.
+- No configuration in `ag_ui_adk` (as of this writing) provides a deterministic fix or a bypass equivalent to L4's `ADKAgent(a2ui={...})` backend-native escape hatch — `generateSandboxedUi` has no such native ADK equivalent; it is inherently and only a JS-runtime-injected tool, so it's exposed to this race on every call.
+- **MCP Apps (Excalidraw) work fine and reliably on either backend.** If your use case is "launch a real external app," ADK is not a blocker at all.
 - If a future `ag_ui_adk` release adds a per-tool override for the long-running designation (or preserves the full argument-streaming sequence through the HITL-resume cycle), this limitation would likely be resolved — worth re-testing on version upgrades.
 
 ---
@@ -244,17 +250,17 @@ adk_agent = ADKAgent(adk_agent=gemini_agent, app_name="demo_app", user_id="demo_
 add_adk_fastapi_endpoint(app=app, agent=adk_agent, path="/")
 ```
 
-`AGUIToolset()` is required for Gemini to see either runtime-injected tool at all (see Required Configuration). Excalidraw works correctly through this path; `generateSandboxedUi` does not (see Known Limitation above).
+`AGUIToolset()` is required for Gemini to see either runtime-injected tool at all (see Required Configuration). Excalidraw works reliably through this path; `generateSandboxedUi` works only intermittently (see Known Limitation above).
 
 ### How to run
 
 **Terminal 1 — backend:**
 
 ```bash
-# LangGraph / OpenAI (default, and the ONLY backend with no known limitations) — Port 8005
+# LangGraph / OpenAI (default; no failures observed in live testing) — Port 8005
 uv run python run_agent.py
 
-# OR Google ADK / Gemini — Port 8005 (Excalidraw works; openGenerativeUI does not — see Known Limitation)
+# OR Google ADK / Gemini — Port 8005 (Excalidraw is reliable; openGenerativeUI is intermittent — see Known Limitation)
 AGENT_TYPE=adk uv run python run_agent.py
 ```
 
@@ -268,9 +274,9 @@ npm run dev
 ```
 
 **Try it** at `http://localhost:3005`:
-* *"Make it rain tacos!"* → `openGenerativeUI`. ✅ LangGraph. ❌ ADK (empty card, see Known Limitation).
-* *"Draw a flowchart of a login process using mermaid"* → `openGenerativeUI` + CDN-loaded `mermaid.js`. ✅ LangGraph. ❌ ADK (raw source text, no rendered diagram).
-* *"Show me a simple network diagram of three routers, two laptops and a server using excalidraw"* → MCP App. ✅ LangGraph. ✅ ADK.
+* *"Make it rain tacos!"* → `openGenerativeUI`. ✅ LangGraph (consistent). ⚠️ ADK (works, shows raw code, or shows an empty card — retry if it doesn't render; see Known Limitation).
+* *"Draw a flowchart of a login process using mermaid"* → `openGenerativeUI` + CDN-loaded `mermaid.js`. ✅ LangGraph (consistent). ⚠️ ADK (same intermittency as above).
+* *"Show me a simple network diagram of three routers, two laptops and a server using excalidraw"* → MCP App. ✅ LangGraph (consistent). ✅ ADK (consistent).
 
 ---
 
@@ -327,4 +333,4 @@ Omitting the client-side prop leaves the feature half-wired: the runtime streams
 - MCP Apps and `openGenerativeUI` are **independent** mechanisms with different requirements, different rendering pipelines, and — as this lesson's live testing showed — different reliability characteristics on ADK.
 - Mermaid's official MCP server doesn't implement the MCP Apps extension, so Mermaid diagrams here are rendered via `openGenerativeUI` (a CDN-loaded `mermaid.js`), not via an MCP server at all.
 - `openGenerativeUI` needs two-sided enablement (server config + client prop) — a gap the notebook's own scaffold doesn't fill in automatically.
-- ADK's `ag_ui_adk` proxies **every** frontend/runtime-injected tool as "long-running," which is compatible with MCP Apps' argument-based rendering but currently breaks `openGenerativeUI`'s progressive-streaming content pipeline — confirmed via live testing on both backends, not assumption.
+- ADK's `ag_ui_adk` proxies **every** frontend/runtime-injected tool as "long-running." This is fully compatible with MCP Apps' argument-based rendering (Excalidraw: 100% reliable), but introduces a race condition in `openGenerativeUI`'s progressive-streaming content pipeline — confirmed via many repeated live attempts on both backends, not assumption: LangGraph never failed, ADK produced a genuine mix of full successes, raw-text fallbacks, and empty cards on functionally identical prompts.
