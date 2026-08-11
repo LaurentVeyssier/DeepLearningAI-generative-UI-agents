@@ -1,0 +1,11 @@
+{
+  "name": "deeplearningai-genui-project",
+  "private": true,
+  "workspaces": [
+    "L2 - simple chat agents with langgraph and adk/frontend",
+    "L3 - controlled genUI with useComponent hook/frontend",
+    "L4 - declarative genui with components catalog/frontend",
+    "L5 - open-ended GenUI with MCP apps/frontend",
+    "L6 - fullstack agentic app sync state frontend/frontend"
+  ]
+}
